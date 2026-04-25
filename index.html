@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Savage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --sweet-bg: #FBEAF0;
+            --sweet-text: #72243E;
+            --savage-bg: #FAECE7;
+            --savage-text: #712B13;
+            --user-bg: #F3F4F6;
+            --user-text: #374151;
+            --bg-color: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: #1F2937;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #setup-screen {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #F3F4F6;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #6B7280;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #chat-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #F3F4F6;
+            background: white;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #FAFAFA;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+            opacity: 0.7;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--user-bg);
+            color: var(--user-text);
+            border-bottom-right-radius: 4px;
+        }
+
+        .sweet-message {
+            align-self: flex-start;
+            background-color: var(--sweet-bg);
+            color: var(--sweet-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .savage-message {
+            align-self: flex-start;
+            background-color: var(--savage-bg);
+            color: var(--savage-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #F3F4F6;
+            display: flex;
+            gap: 12px;
+        }
+
+        #chat-input {
+            margin-bottom: 0;
+            padding: 12px 20px;
+        }
+
+        #send-btn {
+            width: auto;
+            padding: 0 24px;
+        }
+
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 12px;
+            align-self: flex-start;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #D1D5DB;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #374151;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 99px;
+            font-size: 14px;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="setup-screen">
+        <div class="card">
+            <h1>Sweet Savage</h1>
+            <p class="tagline">We love you. We roast you. Always.</p>
+            <input type="password" id="api-key-input" placeholder="Enter your Gemini API key">
+            <span class="hint">Your key is never stored. Only used in this session.</span>
+            <button id="start-btn">Let's Go</button>
+        </div>
+    </div>
+
+    <div id="chat-screen">
+        <div class="header">
+            <h1>Sweet Savage</h1>
+        </div>
+        <div id="chat-messages">
+            <!-- Messages go here -->
+        </div>
+        <div class="input-area">
+            <input type="text" id="chat-input" placeholder="Tell me your news...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Invalid API Key or Error.</div>
+
+    <script type="module">
+        // Vite vazhiya variable ulla varudhu
+        let userApiKey = typeof process !== 'undefined' && process.env ? process.env.GEMINI_API_KEY : '';
+
+        const setupScreen = document.getElementById('setup-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const startBtn = document.getElementById('start-btn');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const toast = document.getElementById('toast');
+
+        // Check panrom key irukka nu
+        if (userApiKey && userApiKey !== 'MY_GEMINI_API_KEY' && userApiKey.trim() !== '') {
+            setupScreen.style.display = 'none';
+            chatScreen.style.display = 'flex';
+            addInitialMessage();
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        startBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                userApiKey = key;
+                setupScreen.style.display = 'none';
+                chatScreen.style.display = 'flex';
+                addInitialMessage();
+            } else {
+                showToast("Dhayavu seidhu API key-ah enter pannunga.");
+            }
+        });
+
+        function addInitialMessage() {
+            if (chatMessages.children.length === 0) {
+                addMessage("Enna macha, enna matter-u? Edhavadhu nalla news illa bad news sollu.", 'sweet', 'Sweet');
+            }
+        }
+
+        function addMessage(text, type, label) {
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+            if (label) {
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'message-label';
+                labelSpan.textContent = label;
+                div.appendChild(labelSpan);
+            }
+            const p = document.createElement('p');
+            p.textContent = text;
+            div.appendChild(p);
+            chatMessages.appendChild(div);
+            // Keela scroll pannu appunee dhaan theriyum
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'typing';
+            div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatMessages.appendChild(div);
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        async function handleSend() {
+            const input = chatInput.value.trim();
+            if (!input || !userApiKey) return;
+
+            addMessage(input, 'user');
+            chatInput.value = '';
+            showTyping();
+
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${userApiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `You are Sweet Savage — a best friend who is warm but secretsly sarcastic.
+IMPORTANT: Respond in Tanglish (Tamil written in English script). Mix Tamil and English naturally.
+When user shares news, reply in exactly this JSON format:
+{
+  "type": "good" or "bad",
+  "sweet": "Genuine warm congratulations or sympathy in Tanglish (2 sentences)",
+  "savage": "Funny sarcastic nakkal twist in Tanglish (1-2 sentences). Be witty, not mean."
+}
+Only return JSON. No extra text.
+
+User says: ${input}`
+                                }]
+                            }]
+                        })
+                    }
+                );
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message || "API error vandhuruchu");
+                }
+
+                const text = data.candidates[0].content.parts[0].text;
+                // JSON clean panrom, markdown-la output vandha kooda
+                const clean = text.replace(/```json|```/g, "").trim();
+                const parsed = JSON.parse(clean);
+
+                hideTyping();
+                addMessage(parsed.sweet, 'sweet', 'Sweet');
+                addMessage(parsed.savage, 'savage', 'Savage');
+
+            } catch (error) {
+                hideTyping();
+                console.error(error);
+                showToast("Etho thappa nadandhuruchu. API key check pannu.");
+                // Auth error-na marupadiyum login page kootitu po
+                if (error.message.includes('API_KEY_INVALID') || error.message.includes('403')) {
+                    setTimeout(() => {
+                        setupScreen.style.display = 'flex';
+                        chatScreen.style.display = 'none';
+                    }, 2000);
+                }
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+</html>
+
