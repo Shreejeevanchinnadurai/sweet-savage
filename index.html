@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sweet Savage</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- LOGIN SCREEN -->
+
+    <div id="login-screen">
+      <div class="login-card">
+        <div class="logo">Sweet Savage</div>
+
+        <div class="tagline">We love you. We roast you. Always.</div>
+
+        <select id="provider-select">
+          <option value="groq">Groq</option>
+        </select>
+
+        <input
+          type="password"
+          id="api-key-input"
+          placeholder="Enter your Groq API key"
+        />
+
+        <span class="hint">
+          Hey user 👋 Try with Groq API key for best experience 😎🔥
+
+          <br /><br />
+
+          Your key is never stored. Only used in this session.
+        </span>
+
+        <button class="btn" id="login-btn">Let's Go</button>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+
+    <div id="chat-screen" class="hidden">
+      <header>
+        <div class="header-logo">Sweet Savage</div>
+
+        <div class="header-actions">
+          <button class="icon-btn" id="new-chat-btn">+</button>
+
+          <button class="icon-btn" id="settings-btn">⚙</button>
+        </div>
+      </header>
+
+      <div id="chat-area"></div>
+
+      <div class="chat-input-area">
+        <input
+          type="text"
+          id="chat-input"
+          class="chat-input"
+          placeholder="Tell me your news..."
+        />
+
+        <button class="send-btn" id="send-btn">Send</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS POPUP -->
+
+    <div id="settings-popup" class="popup-overlay hidden">
+      <div class="popup">
+        <h3>Change API Key</h3>
+
+        <p>This will clear your session and return to login screen.</p>
+
+        <div class="popup-buttons">
+          <button class="cancel-btn" id="cancel-settings">Cancel</button>
+
+          <button class="confirm-btn" id="confirm-settings">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
